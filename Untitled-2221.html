@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adverbs of Frequency - Interactive Lesson</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: #f8fafc;
+      --primary: #16a34a;
+      --primary-light: #dcfce7;
+      --secondary: #0ea5e9;
+      --text-dark: #0f172a;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Tajawal', 'Nunito', sans-serif;
+      background-color: var(--main-bg);
+      color: var(--text-dark);
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 25px 25px;
+      overflow-x: hidden;
+    }
+
+    /* Luxurious Glowing Logo */
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5), inset 0 0 5px rgba(212, 175, 55, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(212, 175, 55, 1), inset 0 0 10px rgba(212, 175, 55, 0.6); transform: scale(1.02); }
+      100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5), inset 0 0 5px rgba(212, 175, 55, 0.3); }
+    }
+    .lux-logo {
+      background: linear-gradient(135deg, #FFDF00, #D4AF37, #996515);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      border: 2px solid #D4AF37;
+      background-color: #0f172a;
+      animation: glow 3s infinite ease-in-out;
+      transition: all 0.3s;
+    }
+    .lux-logo:active { transform: scale(0.95); }
+
+    /* Glass Panels */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 1.5rem;
+      border: 2px solid #ffffff;
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Buttons */
+    .btn-answer {
+      width: 100%;
+      padding: 1.25rem;
+      font-size: 1.2rem;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 1rem;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      direction: ltr;
+    }
+    .btn-answer:hover:not(:disabled) {
+      border-color: var(--secondary);
+      background: #f0f9ff;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(14, 165, 233, 0.1);
+    }
+    .btn-answer.correct {
+      background: #dcfce7;
+      border-color: var(--primary);
+      color: #15803d;
+      box-shadow: inset 0 0 0 2px #15803d;
+    }
+    .btn-answer.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #b91c1c;
+      opacity: 0.7;
+    }
+    .btn-answer:disabled { cursor: default; }
+
+    /* Layout */
+    .screen { display: none; animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    .screen.active { display: block; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grammar Chart */
+    .grammar-chart {
+      background: linear-gradient(to right bottom, #f0f9ff, #e0f2fe);
+      border: 2px solid #bae6fd;
+    }
+
+    /* Tap-to-Order */
+    .tap-word {
+      padding: 0.75rem 1.5rem;
+      background: white;
+      border: 2px solid var(--secondary);
+      color: var(--secondary);
+      border-radius: 99px;
+      font-weight: 800;
+      font-size: 1.2rem;
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      direction: ltr;
+    }
+    .tap-word:hover { background: #f0f9ff; transform: scale(1.05); }
+    .slot-box {
+      border: 2px dashed #cbd5e1;
+      border-radius: 1rem;
+      min-height: 4rem;
+      display: flex; align-items: center; justify-content: center;
+      background: #f8fafc;
+      font-weight: 900; color: var(--primary);
+      font-size: 1.3rem;
+      font-family: 'Nunito', sans-serif;
+    }
+    .slot-box.filled { border-style: solid; border-color: var(--primary); background: #dcfce7; }
+    
+    /* Clickable Question Text */
+    .clickable-question {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .clickable-question:hover {
+      color: var(--secondary);
+    }
+  </style>
+</head>
+<body class="pb-24">
+
+  <!-- Luxurious Logo -->
+  <button id="logo-btn" onclick="showWelcomeToast()" class="fixed top-4 right-4 z-50 rounded-full px-5 py-2 flex items-center gap-2 shadow-2xl lux-logo font-black text-lg cursor-pointer">
+    <i data-lucide="sparkles" class="w-5 h-5 text-yellow-400"></i>
+    ALWADANI
+  </button>
+
+  <!-- Welcome Toast -->
+  <div id="welcome-toast" class="fixed top-20 right-4 z-50 bg-white border-2 border-yellow-400 shadow-2xl rounded-2xl p-4 flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-[-20px] pointer-events-none">
+    <span class="text-3xl">✨</span>
+    <p id="toast-message" class="font-extrabold text-slate-800 text-xl"></p>
+  </div>
+
+  <!-- Header -->
+  <header class="w-full max-w-5xl mx-auto p-4 pt-20 md:pt-6 relative z-10">
+    <div class="glass-panel p-4 px-6 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-4">
+        <div class="bg-green-100 p-3 rounded-2xl text-green-600"><i data-lucide="book-open" class="w-6 h-6"></i></div>
+        <div>
+          <p class="text-xs font-black text-green-600 uppercase tracking-widest m-0 font-sans">Unit 1</p>
+          <h1 class="font-extrabold text-slate-800 m-0 text-xl font-sans" dir="ltr">Adverbs of Frequency</h1>
+        </div>
+      </div>
+      <div class="bg-slate-50 px-5 py-2 rounded-xl border-2 border-slate-200 text-center">
+        <span class="block text-xs font-black uppercase text-slate-500">النقاط</span>
+        <span id="score-display" class="font-black text-2xl text-green-600">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="w-full max-w-5xl mx-auto p-4 relative z-10">
+    
+    <!-- Screen 0: Intro & Login -->
+    <section id="screen-0" class="screen active">
+      <div class="glass-panel p-8 md:p-14 mt-6 border-t-8 border-t-blue-500 text-right">
+        
+        <div class="flex items-center gap-4 mb-6 border-b-2 border-slate-100 pb-4">
+          <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center shrink-0">
+            <i data-lucide="lightbulb" class="w-8 h-8"></i>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-black text-slate-800">تعرّف على القاعدة 💡</h2>
+        </div>
+
+        <div class="bg-gradient-to-l from-blue-50 to-white p-6 rounded-2xl border border-blue-100 mb-8 shadow-sm">
+          <p class="text-lg text-slate-700 leading-relaxed font-bold mb-4">
+            تُستخدم **ظروف التكرار (Adverbs of Frequency)** لتخبرنا عن عدد مرات قيامنا بشيء معين.<br>
+            مثلاً، بدلاً من أن تقول "أنا أستيقظ مبكراً"، يمكنك أن تحدد مقدار ذلك فتقول:
+          </p>
+          
+          <div class="bg-white p-4 rounded-xl border-l-4 border-l-blue-500 shadow-sm inline-block w-full text-center md:text-left" dir="ltr">
+            <p class="text-2xl font-black text-slate-800">I <span class="text-blue-600">always</span> wake up early.</p>
+            <p class="text-slate-500 font-bold mt-1 font-arabic" dir="rtl">(أنا <span class="text-blue-600">دائماً</span> أستيقظ مبكراً).</p>
+          </div>
+        </div>
+
+        <div class="max-w-md mx-auto mb-8 bg-white p-6 rounded-3xl border-2 border-slate-100 shadow-sm text-center">
+          <label class="block font-black text-slate-700 mb-4 text-xl">جاهز للتحدي؟ أدخل اسمك يا بطل!</label>
+          <input type="text" id="student-name" placeholder="اكتب اسمك هنا..." class="w-full text-center p-4 rounded-xl border-2 border-slate-300 text-xl font-bold focus:border-blue-500 outline-none transition-colors shadow-sm">
+          <p id="name-error" class="text-red-500 font-bold mt-2 hidden">يجب إدخال اسمك لنتمكن من البدء!</p>
+          
+          <button onclick="startGame()" class="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xl font-black py-4 rounded-xl shadow-lg transition-transform hover:scale-105 flex items-center justify-center gap-3">
+            ابدأ التحدي <i data-lucide="play-circle" class="w-7 h-7"></i>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Quiz Screens container -->
+    <div id="quiz-container"></div>
+
+    <!-- Screen 5: Finish -->
+    <section id="screen-5" class="screen">
+      <div class="glass-panel p-12 text-center mt-10 border-t-8 border-t-green-500">
+        <div class="w-28 h-28 bg-yellow-100 text-yellow-500 rounded-full mx-auto flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(234,179,8,0.3)] border-4 border-white">
+          <i data-lucide="award" class="w-14 h-14"></i>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-black text-slate-800 mb-4">عمل استثنائي! 🎉</h2>
+        <p class="text-xl text-slate-600 mb-8 font-bold">لقد أتممت جميع التحديات وأتقنت قاعدة (Adverbs of Frequency) بامتياز.</p>
+        <div class="bg-green-50 border-2 border-green-200 rounded-3xl p-8 max-w-sm mx-auto mb-10 shadow-inner">
+          <p class="text-lg font-black text-green-800 uppercase tracking-widest mb-2 font-sans">Final Score</p>
+          <p id="final-score" class="text-6xl font-black text-green-600 font-sans">0 / 0</p>
+        </div>
+        <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white text-xl font-bold py-4 px-10 rounded-2xl transition-all flex items-center gap-3 mx-auto shadow-lg">
+          إعادة التحدي <i data-lucide="refresh-cw" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    let studentName = "";
+    let currentScore = 0;
+    
+    // SFX
+    function playSFX(type) {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      if (type === 'correct') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+      } else {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+      }
+    }
+
+    function speak(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        // Clean blank spaces for better reading
+        const textToRead = text.replace(/___/g, 'blank');
+        const utterance = new SpeechSynthesisUtterance(textToRead);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function showWelcomeToast() {
+      if(!studentName) return;
+      const toast = document.getElementById("welcome-toast");
+      document.getElementById("toast-message").innerText = `أهلاً بك يا بطلنا ${studentName}!`;
+      toast.classList.remove("opacity-0", "translate-y-[-20px]", "pointer-events-none");
+      setTimeout(() => {
+        toast.classList.add("opacity-0", "translate-y-[-20px]", "pointer-events-none");
+      }, 3000);
+    }
+
+    // Grammar Box HTML Component
+    const grammarChartHTML = `
+      <div class="grammar-chart rounded-3xl p-6 mb-8 shadow-sm">
+        <h3 class="font-black text-blue-900 text-xl mb-5 flex items-center gap-2" dir="ltr">
+          <i data-lucide="info" class="text-blue-600"></i> Grammar Rule
+        </h3>
+        <div class="flex flex-col gap-3" dir="ltr">
+          <div class="bg-white rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 text-center md:text-left shadow-sm border border-blue-100">
+            <div class="font-black text-blue-600 text-lg md:w-1/4">How often</div>
+            <div class="font-bold text-slate-700 md:w-1/4"><span class="text-pink-500 font-black text-xl">do</span><br>I / you / we / they</div>
+            <div class="font-bold text-slate-700 md:w-2/4 bg-slate-50 p-3 rounded-lg w-full">walk in the park?</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 text-center md:text-left shadow-sm border border-blue-100">
+            <div class="font-black text-blue-600 text-lg md:w-1/4">How often</div>
+            <div class="font-bold text-slate-700 md:w-1/4"><span class="text-pink-500 font-black text-xl">does</span><br>he / she / it</div>
+            <div class="font-bold text-slate-700 md:w-2/4 bg-slate-50 p-3 rounded-lg w-full">have a cold?</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Lesson Data with Translated Questions (ar_q)
+    const rounds = [
+      {
+        id: 1, title: "فهم القاعدة الأساسية", desc: "اضغط على السؤال للاستماع إليه، ثم اختر الإجابة الصحيحة.", type: "mcq", showGrammar: true,
+        questions: [
+          { 
+            q: "What phrase do we use to ask about the frequency of activities?", 
+            ar_q: "ما هي العبارة التي نستخدمها للسؤال عن مرات تكرار الأنشطة؟",
+            options: ["How much", "How often", "How long"], answer: "How often",
+            rule: "نستخدم عبارة (How often) بمعنى (كم مرة) للسؤال عن عدد مرات تكرار الفعل."
+          },
+          { 
+            q: "Which word is used to talk about activities we do all the time (100%)?", 
+            ar_q: "أي كلمة تستخدم للتحدث عن أنشطة نفعلها طوال الوقت (بنسبة 100%)؟",
+            options: ["usually", "always", "sometimes"], answer: "always",
+            rule: "كلمة (always) تعني دائماً، وتستخدم عندما نفعل الشيء بنسبة 100%."
+          },
+          { 
+            q: "Which word is used to talk about activities we do not do (0%)?", 
+            ar_q: "أي كلمة تستخدم للتحدث عن أنشطة لا نفعلها أبداً (بنسبة 0%)؟",
+            options: ["never", "rarely", "usually"], answer: "never",
+            rule: "كلمة (never) تعني أبداً، وتستخدم عندما لا نفعل الشيء إطلاقاً بنسبة 0%."
+          }
+        ]
+      },
+      {
+        id: 2, title: "استخدام do / does وظروف التكرار", desc: "اضغط على السؤال للاستماع، ثم اختر الكلمة الصحيحة.", type: "mcq", showGrammar: false,
+        questions: [
+          { 
+            q: "How often ___ you see your cousins?", 
+            ar_q: "كم مرة ترى أبناء عمك؟",
+            options: ["do", "does"], answer: "do",
+            rule: "الضمير (you) يأخذ دائماً الفعل المساعد (do)."
+          },
+          { 
+            q: `"We go to school together every day." I ___ see them.`, 
+            ar_q: '"نحن نذهب للمدرسة معاً كل يوم." أنا (دائماً/نادراً) أراهم.',
+            options: ["always", "rarely"], answer: "always",
+            rule: "بما أنهم يذهبون للمدرسة معاً كل يوم (every day)، فإنه يراهم دائماً (always)."
+          },
+          { 
+            q: "How often ___ your aunt give you presents?", 
+            ar_q: "كم مرة تعطيك عمتك الهدايا؟",
+            options: ["do", "does"], answer: "does",
+            rule: "كلمة (aunt) بمعنى عمة هي مفرد وتعود للضمير (she)، لذلك نستخدم (does)."
+          },
+          { 
+            q: `"They live in another country." I ___ visit them.`, 
+            ar_q: '"هم يعيشون في دولة أخرى." أنا (دائماً/نادراً) أزورهم.',
+            options: ["always", "rarely"], answer: "rarely",
+            rule: "لأنهم يعيشون في دولة أخرى (another country)، فمن الصعب زيارتهم دائماً، لذلك الإجابة المنطقية هي نادراً (rarely)."
+          }
+        ]
+      },
+      {
+        id: 3, title: "ترتيب ظروف التكرار", desc: "اضغط على الكلمات لترتيبها من الأكثر تكراراً (100%) إلى الأقل تكراراً (0%).", type: "order", showGrammar: false,
+        words: ["never", "usually", "rarely", "always", "sometimes"],
+        correctOrder: ["always", "usually", "sometimes", "rarely", "never"],
+        percentages: ["100%", "75%", "40%", "10%", "0%"]
+      },
+      {
+        id: 4, title: "تحليل الجمل والمعاني", desc: "اضغط على الجملة للاستماع، ثم اختر ظرف التكرار الذي يتناسب مع المعنى.", type: "mcq", showGrammar: false,
+        questions: [
+          { 
+            q: `"I don't like taking photos." I ___ take photos.`, 
+            ar_q: '"أنا لا أحب التقاط الصور." أنا (دائماً/نادراً) ألتقط الصور.',
+            options: ["always", "rarely"], answer: "rarely",
+            rule: "بما أنه لا يحب (don't like) التقاط الصور، فهو نادراً (rarely) ما يفعل ذلك."
+          },
+          { 
+            q: `"I go every day after school..." I ___ help them.`, 
+            ar_q: '"أنا أذهب كل يوم بعد المدرسة..." أنا (دائماً/أبداً) أساعدهم.',
+            options: ["always", "never"], answer: "always",
+            rule: "لأنه يذهب كل يوم (every day) ليساعدهم، فهذا يعني أنه يفعل ذلك دائماً (always)."
+          },
+          { 
+            q: `"They live in Australia. It's very expensive!" They ___ visit us.`, 
+            ar_q: '"هم يعيشون في أستراليا، والتذاكر غالية جداً!" هم (دائماً/أبداً) يزوروننا.',
+            options: ["always", "never"], answer: "never",
+            rule: "تذاكر أستراليا غالية جداً (very expensive)، ولذلك هم لا يزورونهم أبداً (never)."
+          }
+        ]
+      }
+    ];
+
+    let totalQuestions = 0;
+    rounds.forEach(r => totalQuestions += r.questions ? r.questions.length : r.correctOrder.length);
+
+    const quizContainer = document.getElementById('quiz-container');
+    
+    rounds.forEach((round) => {
+      const section = document.createElement('section');
+      section.id = `screen-${round.id}`;
+      section.className = "screen";
+      
+      let contentHTML = `
+        <div class="glass-panel p-6 md:p-10 mt-6 border-t-8 border-t-blue-500">
+          <div class="flex items-center gap-4 mb-6">
+            <span class="bg-blue-600 text-white font-black px-4 py-2 rounded-xl text-lg shadow-md font-sans">Round ${round.id}</span>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-800">${round.title}</h2>
+          </div>
+          <p class="text-slate-600 font-bold text-lg mb-8 flex items-center gap-2">
+             <i data-lucide="headphones" class="w-5 h-5 text-blue-500"></i> ${round.desc}
+          </p>
+          
+          ${round.showGrammar ? grammarChartHTML : ''}
+          
+          <div class="space-y-8" id="interaction-area-${round.id}"></div>
+          
+          <div class="mt-10 pt-6 border-t-2 border-slate-100 flex justify-end">
+            <button onclick="nextScreen(${round.id + 1})" class="bg-slate-800 hover:bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition-transform hover:scale-105 hidden shadow-lg text-lg" id="next-btn-${round.id}">
+              المرحلة التالية <i data-lucide="arrow-left" class="w-6 h-6"></i>
+            </button>
+          </div>
+        </div>
+      `;
+      section.innerHTML = contentHTML;
+      quizContainer.appendChild(section);
+
+      const intArea = document.getElementById(`interaction-area-${round.id}`);
+      
+      // Render MCQ
+      if (round.type === "mcq") {
+        round.questions.forEach((q, qIndex) => {
+          const qBlock = document.createElement('div');
+          qBlock.className = "bg-white border-2 border-slate-100 p-6 md:p-8 rounded-3xl shadow-sm";
+          
+          // Fix quotes for JS string passing
+          const cleanQ = q.q.replace(/'/g, "\\'");
+
+          let optionsHTML = q.options.map(opt => 
+            `<button onclick="handleAnswer(this, '${opt}', '${round.id}', ${qIndex})" class="btn-answer">${opt}</button>`
+          ).join('');
+
+          qBlock.innerHTML = `
+            <div class="flex flex-col md:flex-row gap-4 items-start md:items-center mb-6 border-b-2 border-slate-50 pb-6" dir="ltr">
+              <button onclick="speak('${cleanQ}')" class="shrink-0 w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors shadow-sm border border-blue-100" title="استمع للسؤال">
+                <i data-lucide="volume-2" class="w-6 h-6"></i>
+              </button>
+              <h3 onclick="speak('${cleanQ}')" class="text-xl md:text-2xl font-black text-slate-800 leading-snug font-sans clickable-question" title="اضغط للاستماع">${qIndex + 1}. ${q.q}</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="opts-${round.id}-${qIndex}">
+              ${optionsHTML}
+            </div>
+            <div id="feedback-${round.id}-${qIndex}" class="mt-4 hidden"></div>
+          `;
+          intArea.appendChild(qBlock);
+        });
+      }
+      
+      // Render Tap-to-Order
+      if (round.type === "order") {
+        let slotsHTML = round.percentages.map((p, i) => `
+          <div class="flex flex-col items-center gap-3">
+            <span class="font-black text-slate-400 text-lg font-sans">${p}</span>
+            <div class="slot-box w-full shadow-inner" id="slot-${i}" data-correct="${round.correctOrder[i]}"></div>
+          </div>
+        `).join('');
+        
+        let wordsHTML = round.words.map(w => 
+          `<button onclick="handleTapWord(this, '${w}')" class="tap-word shadow-sm" id="word-${w}">${w}</button>`
+        ).join('');
+
+        intArea.innerHTML = `
+          <div class="bg-gradient-to-b from-blue-50 to-white border-2 border-blue-100 p-8 rounded-3xl shadow-sm">
+            <div class="flex flex-wrap gap-4 justify-center mb-10 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm" id="word-bank">
+              ${wordsHTML}
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6" id="slots-container">
+              ${slotsHTML}
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    // Functions
+    function startGame() {
+      const nameInput = document.getElementById('student-name');
+      if (!nameInput.value.trim()) {
+        document.getElementById('name-error').classList.remove('hidden');
+        return;
+      }
+      studentName = nameInput.value.trim();
+      
+      // Trigger Welcome Toast
+      showWelcomeToast();
+
+      document.getElementById('screen-0').classList.remove('active');
+      document.getElementById('screen-1').classList.add('active');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function nextScreen(nextId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(`screen-${nextId}`).classList.add('active');
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(nextId === 5) {
+        document.getElementById('final-score').innerText = `${currentScore} / ${totalQuestions}`;
+      }
+    }
+
+    function updateScore() {
+      document.getElementById('score-display').innerText = currentScore;
+    }
+
+    function checkRoundComplete(roundId) {
+      const intArea = document.getElementById(`interaction-area-${roundId}`);
+      let isComplete = true;
+      
+      if (rounds[roundId-1].type === "mcq") {
+        const optionGrids = intArea.querySelectorAll('.grid');
+        optionGrids.forEach(grid => {
+          if (!grid.querySelector('.correct')) isComplete = false;
+        });
+      } else if (rounds[roundId-1].type === "order") {
+        const slots = intArea.querySelectorAll('.slot-box');
+        slots.forEach(slot => {
+          if (!slot.classList.contains('filled')) isComplete = false;
+        });
+      }
+
+      if (isComplete) {
+        document.getElementById(`next-btn-${roundId}`).classList.remove('hidden');
+      }
+    }
+
+    function handleAnswer(btn, selected, roundId, qIndex) {
+      // Read the selected word out loud
+      speak(selected);
+      
+      const roundData = rounds[roundId-1];
+      const questionData = roundData.questions[qIndex];
+      const correct = questionData.answer;
+      const rule = questionData.rule;
+      const ar_q = questionData.ar_q;
+      
+      const container = btn.parentElement;
+      const allBtns = container.querySelectorAll('button');
+      const feedbackDiv = document.getElementById(`feedback-${roundId}-${qIndex}`);
+      
+      allBtns.forEach(b => b.disabled = true); 
+      
+      if (selected === correct) {
+        playSFX('correct');
+        btn.classList.add('correct');
+        currentScore++;
+        
+        feedbackDiv.innerHTML = `
+          <div class="bg-green-50 border-2 border-green-200 p-4 rounded-xl mt-4 text-right flex items-start gap-3">
+            <div class="bg-green-500 text-white p-1.5 rounded-lg shrink-0 mt-1"><i data-lucide="check" class="w-5 h-5"></i></div>
+            <div>
+              <p class="text-green-800 font-bold text-lg mb-1">أحسنت يا ${studentName}! إجابة رائعة.</p>
+              <p class="text-green-700 font-medium">💡 ${rule}</p>
+            </div>
+          </div>
+        `;
+      } else {
+        playSFX('wrong');
+        btn.classList.add('wrong');
+        allBtns.forEach(b => {
+          if(b.innerText === correct) b.classList.add('correct');
+        });
+        
+        feedbackDiv.innerHTML = `
+          <div class="bg-red-50 border-2 border-red-200 p-5 rounded-xl mt-4 text-right">
+            <p class="text-red-600 font-black text-lg mb-4 flex items-center gap-2">
+              <i data-lucide="x-circle"></i> لا بأس يا ${studentName}، نتعلم من أخطائنا!
+            </p>
+            
+            <div class="bg-white p-4 rounded-lg border border-red-100 shadow-sm mt-3 space-y-4">
+              <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <span class="text-blue-500 mt-1"><i data-lucide="languages" class="w-5 h-5"></i></span> 
+                <p class="text-slate-700 font-bold text-lg"><b>ترجمة السؤال:</b> <br><span class="text-slate-600 font-medium">${ar_q}</span></p>
+              </div>
+              
+              <div class="flex items-start gap-3 border-b border-slate-100 pb-3">
+                <span class="text-green-600 mt-1"><i data-lucide="check-circle-2" class="w-5 h-5"></i></span> 
+                <p class="text-green-700 font-bold text-lg"><b>الإجابة الصحيحة هي:</b> <span class="font-black font-sans bg-green-100 px-2 py-1 rounded" dir="ltr">${correct}</span></p>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <span class="text-purple-500 mt-1"><i data-lucide="lightbulb" class="w-5 h-5"></i></span> 
+                <p class="text-slate-700 font-bold text-lg"><b>تذكر القاعدة:</b> <br><span class="text-slate-600 font-medium">${rule}</span></p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      feedbackDiv.classList.remove('hidden');
+      lucide.createIcons({ root: feedbackDiv });
+      updateScore();
+      checkRoundComplete(roundId);
+    }
+
+    function handleTapWord(btn, word) {
+      speak(word);
+      const slots = document.querySelectorAll('#slots-container .slot-box');
+      let targetSlot = null;
+      
+      for (let slot of slots) {
+        if (!slot.classList.contains('filled')) {
+          targetSlot = slot;
+          break;
+        }
+      }
+
+      if (targetSlot) {
+        if (targetSlot.dataset.correct === word) {
+          playSFX('correct');
+          targetSlot.innerText = word;
+          targetSlot.classList.add('filled');
+          btn.style.visibility = 'hidden';
+          currentScore++;
+          updateScore();
+          checkRoundComplete(3);
+        } else {
+          playSFX('wrong');
+          btn.classList.add('bg-red-100', 'border-red-400', 'text-red-600');
+          setTimeout(() => {
+            btn.classList.remove('bg-red-100', 'border-red-400', 'text-red-600');
+          }, 500);
+        }
+      }
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
